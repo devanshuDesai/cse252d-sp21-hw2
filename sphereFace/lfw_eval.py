@@ -26,7 +26,6 @@ def alignment(src_img, src_pts):
     return face_img
 
 def cropping(src_img ):
-    # IMPLEMENT cropping the center of image
     crop_size = (96, 112)
     src_img = np.asarray(src_img )[:, :, ::-1]
     h, w = src_img.shape[0], src_img.shape[1]

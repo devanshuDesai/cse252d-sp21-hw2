@@ -36,6 +36,11 @@ class CustomLinear(nn.Module):
         cos_theta = cos_theta.clamp(-1,1)
 
         # IMPLEMENT phi_theta
+        cos_m_theta = self.mlambda[self.m](cos_theta)
+        theta = Variable(cos_theta.data.acos())
+        k = (self.m*theta/3.14159265).floor()
+        n_one = k*0.0 - 1
+        phi_theta = (n_one**k) * cos_m_theta - 2*k
 
         cos_theta = cos_theta * xlen.view(-1,1)
         phi_theta = phi_theta * xlen.view(-1,1)
@@ -60,6 +65,23 @@ class CustomLoss(nn.Module):
         target = target.view(-1,1) #size=(B,1)
 
         # IMPLEMENT loss
+        index = cos_theta.data * 0.0 #size=(B,Classnum)
+        index.scatter_(1,target.data.view(-1,1),1)
+        index = index.byte()
+        index = Variable(index)
+
+        self.lamb = max(self.LambdaMin,self.LambdaMax/(1+0.1*self.it ))
+        output = cos_theta * 1.0 #size=(B,Classnum)
+        output[index] -= cos_theta[index]*(1.0+0)/(1+self.lamb)
+        output[index] += phi_theta[index]*(1.0+0)/(1+self.lamb)
+
+        logpt = F.log_softmax(output)
+        logpt = logpt.gather(1,target)
+        logpt = logpt.view(-1)
+        pt = Variable(logpt.data.exp())
+
+        loss = -1 * (1-pt)**self.gamma * logpt
+        loss = loss.mean()
 
         _, predictedLabel = torch.max(cos_theta.data, 1)
         predictedLabel = predictedLabel.view(-1, 1)
