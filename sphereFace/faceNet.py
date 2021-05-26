@@ -80,7 +80,7 @@ class CustomLoss(nn.Module):
         logpt = logpt.view(-1)
         pt = Variable(logpt.data.exp())
 
-        loss = -1 * (1-pt)**self.gamma * logpt
+        loss = -logpt
         loss = loss.mean()
 
         _, predictedLabel = torch.max(cos_theta.data, 1)
