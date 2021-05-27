@@ -1,3 +1,6 @@
 model/
 __pycache__/
 .ipynb_checkpoints/
+checkpoint/
+data/
+visualization_utils.py
