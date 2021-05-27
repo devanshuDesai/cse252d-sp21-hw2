@@ -171,7 +171,7 @@ class faceNet(nn.Module):
         self.bn5 = nn.BatchNorm1d(512)
         self.fc6 = CustomLinear(in_features=512,
                                 out_features=self.classnum, m=m)
-        self.bn6 = nn.BatchNorm1d(self.classnum)
+        # self.bn6 = nn.BatchNorm1d(self.classnum)
 
     def forward(self, x):
         x = self.relu1_1(self.bn1_1(self.conv1_1(x)))
@@ -212,5 +212,4 @@ class faceNet(nn.Module):
             return x
 
         x = self.fc6(x)
-        x = self.bn6(x)
         return x
