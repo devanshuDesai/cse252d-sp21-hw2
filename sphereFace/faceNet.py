@@ -4,7 +4,9 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 from torch.nn import Parameter
 import numpy as np
+import warnings
 
+warnings.filterwarnings('ignore')
 
 class CustomLinear(nn.Module):
     def __init__(self, in_features, out_features, m=4):
