@@ -10,7 +10,9 @@ import faceNet
 import torch.nn as nn
 import os
 import numpy as np
+import warnings
 
+warnings.filterwarnings('ignore')
 
 parser = argparse.ArgumentParser()
 # The locationi of training set
