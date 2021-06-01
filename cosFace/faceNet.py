@@ -52,10 +52,10 @@ class CustomLoss(nn.Module):
         index = index.byte()
         index = Variable(index)
 
-        self.lamb = max(self.LambdaMin, self.LambdaMax/(1+0.1*self.it))
         output = cos_theta * 1.0  # size=(B,Classnum)
-        output[index] -= cos_theta[index]*(1.0+0)/(1+self.lamb)
-        output[index] += phi_theta[index]*(1.0+0)/(1+self.lamb)
+        output[index] -= cos_theta[index]*(1.0+0)
+        output[index] += phi_theta[index]*(1.0+0)
+        output[index] *= self.s
 
         logpt = F.log_softmax(output)
         logpt = logpt.gather(1, target)
