@@ -53,14 +53,13 @@ class CustomLoss(nn.Module):
         index = Variable(index)
 
         output = cos_theta * 1.0  # size=(B,Classnum)
-        output[index] -= cos_theta[index]*(1.0+0)
-        output[index] += phi_theta[index]*(1.0+0)
-        output[index] *= self.s
+        output[index] = phi_theta[index] * 1.0
+        output *= self.s
 
         logpt = F.log_softmax(output)
         logpt = logpt.gather(1, target)
         logpt = logpt.view(-1)
-        pt = Variable(logpt.data.exp())
+        # pt = Variable(logpt.data.exp())
 
         loss = -logpt
         loss = loss.mean()
@@ -78,6 +77,7 @@ class faceNet(nn.Module):
         self.classnum = classnum
         self.feature = feature
 
+        # IMPLEMENT resdiual network 20-layer with batch normalization
         self.conv1_1 = nn.Conv2d(3, 64, 3, 2, 1)  # =>B*64*56*48
         self.bn1_1 = nn.BatchNorm2d(64)
         self.relu1_1 = nn.PReLU(64)
@@ -148,8 +148,6 @@ class faceNet(nn.Module):
 
         self.fc5 = nn.Linear(512*7*6, 512)
         self.bn5 = nn.BatchNorm1d(512)
-
-        # IMPLEMENT resdiual network 20-layer with batch normalization
 
         self.fc6 = CustomLinear(in_features = 512,
                 out_features = self.classnum, m=m)
