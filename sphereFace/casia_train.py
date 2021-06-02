@@ -43,7 +43,6 @@ if torch.cuda.is_available() and opt.noCuda:
 
 # Initialize network
 net = faceNet.faceNet(m = opt.marginFactor, feature = False )
-net.train()
 lossLayer = faceNet.CustomLoss()
 
 # Move network and containers to gpu
